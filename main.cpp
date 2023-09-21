@@ -1,6 +1,25 @@
 #include <iostream>
 #include <string>
 
+class Storey {
+	public:
+		Storey() : source_(serial_number_), uid_(serial_number_) {
+			++serial_number_;
+			std::cout <<" Storey::Storey() : id = source = " << uid_ << " at " << this << std::endl;
+		}	
+		Storey(const Storey& rhs);
+		~Storey();
+		Storey& operator=(const Storey& rhs);
+	private:
+		int source_;
+		int uid_;// unique identifier
+		static int serial_number_; //constant value for all objects of the class
+};
+int Storey::serial_number_ = 1;
+Storey::Storey( const Storey& rhs ) : source_( rhs.source_), uid_( serial_number_++) {
+	std::cout << " Storey:: Storey( rhs = id = " << rhs.uid_ << " ), uid = " << uid_ << " at " << this << std::endl;
+}
+
 
 class Building {
 	public:
@@ -47,6 +66,21 @@ int main( int argc, char** argv ) {
 		street[ib] =  Building( ib);
 	}	
 	
+	// Resize array
+	{
+	Building* bigger_street = new Building [size +1];
+	for( int i =0 ; i < size; ++i) {
+		bigger_street[i] = street[i];
+	}
+	delete [] street;
+	size += 1;
+	street = bigger_street;
+	}
+	{
+	Building city_hall(1000);
+	Building new_city_hall(city_hall);
+	street[size-1] = new_city_hall;
+	}
 	for(int i=0; i<10 ; ++i) {
 		
 		street[i].print(std::cout);	
